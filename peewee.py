@@ -16,6 +16,7 @@ import re
 import threading
 from collections import deque, namedtuple
 from copy import deepcopy
+from numbers import Number
 
 __all__ = [
     'IntegerField', 'BigIntegerField', 'PrimaryKeyField', 'FloatField', 'DoubleField',
@@ -128,6 +129,9 @@ class Leaf(object):
     def __init__(self):
         self.negated = False
         self._alias = None
+
+    def __hash__(self):
+        return id(self)
 
     def clone_base(self):
         return type(self)()
@@ -388,8 +392,10 @@ class DecimalField(Field):
 def format_unicode(s, encoding='utf-8'):
     if isinstance(s, unicode):
         return s
-    elif isinstance(s, basestring):
+    elif hasattr(s, 'decode'):
         return s.decode(encoding)
+    elif isinstance(s, Number):
+        return unicode(s)
     elif hasattr(s, '__unicode__'):
         return s.__unicode__()
     else:

@@ -24,4 +24,5 @@ setup(
     ],
     test_suite='runtests.collect',
     scripts = ['pwiz.py'],
+    use_2to3 = True
 )
